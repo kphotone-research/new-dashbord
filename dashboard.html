@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Member Dashboard — Kphotone</title>
+  <style>
+    body { font-family:Arial; background:#f4f8ff; margin:0; padding:24px; }
+    .header { display:flex; justify-content:space-between; align-items:center; }
+    .logout-btn { padding:10px 16px; background:#005eff; color:#fff; border:none; border-radius:8px; cursor:pointer; }
+    .info { margin-top:24px; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div><strong>Welcome,</strong> <span id="userName"></span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="info">
+    <h3>Your Dashboard</h3>
+    <p>This is placeholder — later we will show participation history, earnings, etc.</p>
+  </div>
+
+<script>
+  const name = localStorage.getItem("kp_user_fullname") || "Member";
+  document.getElementById("userName").innerText = name;
+
+  function logout(){
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+</script>
+</body>
+</html>
