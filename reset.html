@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Reset Password — Kphotone</title>
+  <style>
+    body { font-family:Arial; padding:20px; background:#f4f8ff; }
+    .box { max-width:400px; margin:40px auto; background:#fff; padding:24px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+    input { width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:8px; }
+    button { width:100%; padding:12px; background:#005eff; color:#fff; border:none; border-radius:8px; font-size:16px; cursor:pointer; }
+    .msg { margin-top:12px; color:#333; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Reset Your Password</h2>
+    <input type="password" id="newPass" placeholder="New Password" />
+    <input type="password" id="confirmPass" placeholder="Confirm New Password" />
+    <button onclick="resetPass()">Update Password</button>
+    <p class="msg" id="msg"></p>
+  </div>
+
+<script>
+  async function resetPass(){
+    const newP = document.getElementById("newPass").value.trim();
+    const confirmP = document.getElementById("confirmPass").value.trim();
+    const msg = document.getElementById("msg");
+
+    if (!newP || newP !== confirmP) {
+      msg.innerText = "Passwords do not match or empty.";
+      return;
+    }
+
+    const email = localStorage.getItem("resetEmail");
+    if (!email) {
+      msg.innerText = "Invalid request. Please login again.";
+      return;
+    }
+
+    const url = "https://script.google.com/macros/s/AKfycbxM-PTA0gjIiZrrmoCvK_CLtr6sCBQR9_Q46lOUjqE04GlZi819vhvDsY3baF8G_gTmMg/exec";
+    const body = new URLSearchParams();
+    body.append("action", "resetPassword");
+    body.append("email", email);
+    body.append("newPassword", newP);
+
+    try {
+      const res = await fetch(url, { method: "POST", body: body });
+      const data = await res.json();
+      if (data.success) {
+        msg.innerText = "Password updated. Redirecting to login...";
+        setTimeout(() => window.location.href = "login.html", 2000);
+      } else {
+        msg.innerText = data.message || "Failed to reset password.";
+      }
+    } catch (e) {
+      console.error(e);
+      msg.innerText = "Server error. Try again.";
+    }
+  }
+</script>
+</body>
+</html>
